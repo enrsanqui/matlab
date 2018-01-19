@@ -1,0 +1,14 @@
+%% Execution of Fluent in batch
+% This script execute fluent in batch mode
+function ElapsedTime = ExecuteFluent(Journal,CurrentFolder,ReFolderName)
+
+FluentPath = '"C:\Program Files\ANSYS Inc\v161\fluent\ntbin\win64\fluent.exe"';
+inputfile = [CurrentFolder,'\',ReFolderName,'\',Journal];
+Solver = '2ddp';
+comandoDOS = [FluentPath,' ',Solver,' -t8 -hidden -g',' -i ',inputfile];
+
+tic;
+
+dos(comandoDOS)
+
+ElapsedTime = toc;

@@ -1,0 +1,10 @@
+filename = ['ProfilesReport_Re_',num2str(Re)];
+
+fid = fopen([Path,'\',RePath,'\',filename,'.dat'],'r');
+i = 1;
+A{i} = fgetl(fid);
+while ~feof(fid)
+    i=i+1;
+    A{i} = fgetl(fid);
+end
+fclose(fid);

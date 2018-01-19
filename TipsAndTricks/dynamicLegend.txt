@@ -1,0 +1,7 @@
+leyenda=cell(length(ansys.vecpsi),1);
+leyenda_ex=cell(length(ansys.vecpsi),1);
+
+for i=1:length(ansys.vecpsi)
+    leyenda_ex(i)={strcat('Exacta, \xi=',num2str(ansys.vecpsi(i)))};
+    leyenda(i)={strcat('Ansys, \xi=',num2str(ansys.vecpsi(i)))};
+end

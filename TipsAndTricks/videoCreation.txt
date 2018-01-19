@@ -1,0 +1,72 @@
+    if n == 2
+        % Figure properties
+        figure(1), set(gcf,'Color','White');
+        % Plot properties
+        h = plot(u(1:Ny),yv(1:Ny)); 
+        set(h,'LineWidth',1.2)
+        t1 = text(0.1,0.2,['x = ',num2str(xv(n))],'Fontsize',20); %text indicating the step
+        set(t1,'Color',[0 150/255 0])
+        t2 = text(u(ind),deltav(n),['\it\delta(x) = ',num2str(deltav(n)),'\leftarrow'],'fontsize',25); % text indicating the BL thickness
+        set(t2,'Color',[0 0 150/255],'HorizontalAlignment','right');
+        t3 = text(u(ind1),delta1(n),['\it\delta_1(x) = ',num2str(delta1(n)),'\leftarrow'],'fontsize',25); % text indicating the BL thickness
+        set(t3,'Color',[0 150/255 0],'HorizontalAlignment','right');
+        t4 = text(u(ind2),delta2(n),['\it\delta_2(x) = ',num2str(delta2(n)),'\leftarrow'],'fontsize',25); % text indicating the BL thickness
+        set(t4,'Color',[150/255 0 0],'HorizontalAlignment','right');
+        h.XDataSource = 'u'; %Data to be refreshed
+        h.YDataSource = 'yv';
+        grid on % Smart grid
+        axis([0 1 0 ymax]) %Axis to contain only the boundary layer
+        winsize = get(0,'ScreenSize');
+        set(gcf,'position',[winsize(1) winsize(2) winsize(3) winsize(4)]);  % Figure maximized
+        %
+        % Parameters for the video
+        %
+        nframes = Nx-1;
+        vidObj = VideoWriter(['BoundaryLayerThinPlate_','Re_',num2str(Re), '.avi']); %#ok
+        vidObj.Quality = 100;
+        vidObj.FrameRate = 100;
+        open(vidObj);
+    else
+        refreshdata(h,'caller');
+        pause(0.01)
+        figure(1)
+        drawnow
+        delete(t1);
+        delete(t2);
+        delete(t3);
+        delete(t4);
+        t1 = text(0.1,0.2,['\itx_n = ',num2str(xv(n))],'Fontsize',35);
+        t2 = text(u(ind),deltav(n),['\it\delta(x) = ',num2str(deltav(n)),'\leftarrow'],'fontsize',25);
+        t3 = text(u(ind1),delta1(n),['\it\delta_1(x) = ',num2str(delta1(n)),'\leftarrow'],'fontsize',25);
+        t4 = text(u(ind2),delta2(n),['\it\delta_2(x) = ',num2str(delta2(n)),'\leftarrow'],'fontsize',25);
+        set(t2,'Color',[0 0 150/255],'HorizontalAlignment','right');
+        set(t3,'Color',[0 150/255 0],'HorizontalAlignment','right');
+        set(t4,'Color',[150/255 0 0],'HorizontalAlignment','right');
+        set(t1,'Color',[0 150/255 0])
+    end
+    writeVideo(vidObj,getframe(gcf));
+    switch n
+        case round(Nx/4)
+            figure(2), hold on
+            h2 = plot(u(1:Ny),yv(1:Ny),'b','Linewidth',1.2);
+        case round(Nx/2)
+            figure(2), hold on
+            h3 = plot(u(1:Ny),yv(1:Ny),'r','Linewidth',1.2);
+        case round(Nx*3/4)
+            figure(2),hold on
+            h4 = plot(u(1:Ny),yv(1:Ny),'g','Linewidth',1.2);
+        case Nx
+            figure(2),hold on
+            h5 = plot(u(1:Ny),yv(1:Ny),'y','Linewidth',1.2);
+            grid on
+            legend([h2,h3,h4,h5],'\itx_n = 0.25','\itx_n = 0.5','\itx_n = 0.75','\itx_n = 1','Location','West');
+            xlabel('$u/U_\infty$','interpreter','latex','fontsize',16);
+            ylabel('$y/L$','interpreter','latex','fontsize',16);
+            title('Boundary Layer Velocity Profile','interpreter','latex','fontsize',20)
+            set(gcf,'Position',[winsize(1) winsize(2) winsize(3) winsize(4)]);
+            saveas(gcf,['BL_Vprof_Re',num2str(Re)],'pdf')
+    end
+end
+%
+% Close video and write it.
+close(vidObj);

@@ -1,0 +1,7 @@
+fid = fopen([Path,'\',RePath,'\',filename,'_mat.dat'],'w');
+for i=2:length(A)        % i=2 since header must be forgotten
+    fprintf(fid,[A{i},'\n']);
+end
+fclose(fid);
+
+clear A
